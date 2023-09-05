@@ -1,4 +1,11 @@
-import { Box, Button, Divider, TextField, Typography } from "@mui/material"
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Divider,
+  TextField,
+  Typography,
+} from "@mui/material"
 
 interface CompletedBoxInterface {
   completedTasks: any[]
@@ -22,32 +29,36 @@ const CompletedBox = ({ completedTasks }: CompletedBoxInterface) => {
       </Box>
       <Divider />
       <Box>
-        {completedTasks.map((task: any) => {
-          const doneTimestampString = new Date(task.done_timestamp).toString()
-          return (
-            <Box key={task.id}>
-              <Box
-                display="flex"
-                p="20px 0"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Box>
-                  <Typography>{task.description}</Typography>
-                  <Typography fontSize={12}>
-                    {doneTimestampString.slice(
-                      0,
-                      doneTimestampString.indexOf("GMT")
-                    )}
-                  </Typography>
+        {completedTasks ? (
+          completedTasks.map((task: any) => {
+            const doneTimestampString = new Date(task.done_timestamp).toString()
+            return (
+              <Box key={task.id}>
+                <Box
+                  display="flex"
+                  p="20px 0"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Box>
+                    <Typography>{task.description}</Typography>
+                    <Typography fontSize={12}>
+                      {doneTimestampString.slice(
+                        0,
+                        doneTimestampString.indexOf("GMT")
+                      )}
+                    </Typography>
+                  </Box>
+                  <Typography>{task.responsible}</Typography>
+                  <Typography>{task.type}</Typography>
                 </Box>
-                <Typography>{task.responsible}</Typography>
-                <Typography>{task.type}</Typography>
+                <Divider />
               </Box>
-              <Divider />
-            </Box>
-          )
-        })}
+            )
+          })
+        ) : (
+          <CircularProgress />
+        )}
       </Box>
     </Box>
   )
