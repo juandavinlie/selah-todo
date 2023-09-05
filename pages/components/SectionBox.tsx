@@ -1,4 +1,11 @@
-import { Box, Button, Divider, TextField, Typography } from "@mui/material"
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Divider,
+  TextField,
+  Typography,
+} from "@mui/material"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { useContext, useEffect, useState } from "react"
 
@@ -7,10 +14,13 @@ interface SectionBoxInterface {
   loadCompletedTasks: () => void
 }
 
+const types = ["Beli", "Bayar", "Benerin", "Lain"]
+
 const SectionBox = ({ name, loadCompletedTasks }: SectionBoxInterface) => {
   const [isAdding, setIsAdding] = useState(false)
   const [newTaskDescription, setNewTaskDescription] = useState("")
   const [type, setType] = useState("")
+  const [inputType, setInputType] = useState("")
 
   const supabase = useSupabaseClient()
 
@@ -127,40 +137,34 @@ const SectionBox = ({ name, loadCompletedTasks }: SectionBoxInterface) => {
               }}
             />
           </Box>
-          {/* <Box>
-            <Typography>Tugas</Typography>
-            <TextField
-              value={responsible}
-              fullWidth
-              multiline
-              inputProps={{
-                style: { fontSize: 14, padding: 1 },
-              }}
-              InputProps={{ sx: { borderRadius: 3 } }}
-              required
-              error={!responsible}
-              helperText={!responsible ? "Harus pilih nama" : ""}
-              onChange={(e: any) => {
-                setResponsible(e.currentTarget.value)
-              }}
-            />
-          </Box> */}
           <Box>
             <Typography>Tipe</Typography>
-            <TextField
+            <Autocomplete
               value={type}
-              fullWidth
-              multiline
-              inputProps={{
-                style: { fontSize: 14, padding: 1 },
+              onChange={(event: any, newType: string | null) => {
+                setType(newType ? newType : "")
               }}
-              InputProps={{ sx: { borderRadius: 3 } }}
-              required
-              error={!type}
-              helperText={!type ? "Harus pilih tipe" : ""}
-              onChange={(e: any) => {
-                setType(e.currentTarget.value)
+              inputValue={inputType}
+              onInputChange={(event: any, newInputType: string) => {
+                setInputType(newInputType)
               }}
+              disablePortal
+              id="currency-auto-complete"
+              options={types}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  padding: "10px!important",
+                  fontSize: "14px!important",
+                },
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Bayar / Beli / Benerin / Lain"
+                  error={!type}
+                  helperText={!type ? "Harus pilih tipe" : ""}
+                />
+              )}
             />
           </Box>
           <Box display="flex" justifyContent="flex-end" gap="10px">
